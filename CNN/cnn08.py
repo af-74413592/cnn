@@ -34,9 +34,6 @@ def sigmoid(x):
 def tanh(x):
     return 2 * sigmoid(2*x) - 1
 
-def L2Norm(l, theta):
-    return np.dot(theta, theta) * l
-
 def L2NormPartial(l, theta):
     return theta * l
 
@@ -401,12 +398,14 @@ class SGD(Optimizer):
             param.value -= self.lr * param.grad
 
 class L2SGD(Optimizer):
-    def __init__(self,params,lr = 0.01):
+    def __init__(self,params,lr = 0.01,r=0.001):
         super().__init__(params,lr)
+        self.r = r
 
     def step(self):
         for param in self.params:
-            param.value -= self.lr * param.grad + L2NormPartial(0.01,param.value)
+            #bias不需要正则 懒得改了
+            param.value -= self.lr * param.grad + L2NormPartial(self.r,param.value)
 
 class MomentumSGD(Optimizer):
     def __init__(self,params,lr = 0.01,momentum = 0.9):
@@ -595,7 +594,7 @@ if __name__ == '__main__':
     #print(model)
     params = model.get_parameters()
     #opt = SGD(params,lr)
-    #opt = L2SGD(params, lr)
+    #opt = L2SGD(params, lr,r=0.001)
     opt = MomentumSGD(params,lr)
     #opt = Adam(params)
 
