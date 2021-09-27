@@ -34,6 +34,12 @@ def sigmoid(x):
 def tanh(x):
     return 2 * sigmoid(2*x) - 1
 
+def L2Norm(l, theta):
+    return np.dot(theta, theta) * l
+
+def L2NormPartial(l, theta):
+    return theta * l
+
 class MyDataSet():
     def __init__(self,imgdata,imglabel,batch_size,shuffle):
         self.imgdata = imgdata
@@ -394,6 +400,14 @@ class SGD(Optimizer):
         for param in self.params:
             param.value -= self.lr * param.grad
 
+class L2SGD(Optimizer):
+    def __init__(self,params,lr = 0.01):
+        super().__init__(params,lr)
+
+    def step(self):
+        for param in self.params:
+            param.value -= self.lr * param.grad + L2NormPartial(0.01,param.value)
+
 class MomentumSGD(Optimizer):
     def __init__(self,params,lr = 0.01,momentum = 0.9):
         super().__init__(params, lr)
@@ -581,6 +595,7 @@ if __name__ == '__main__':
     #print(model)
     params = model.get_parameters()
     #opt = SGD(params,lr)
+    #opt = L2SGD(params, lr)
     opt = MomentumSGD(params,lr)
     #opt = Adam(params)
 
@@ -598,12 +613,6 @@ if __name__ == '__main__':
                 opt.step()
 
                 opt.zero_grad()
-
-        #x = model(test_data)
-
-        #acc = np.sum(model.predict == test_label) / 100
-
-        #print(f"epoch:{e}, acc : {acc:.3f} %,  loss : {loss:.3f}")
 
         model.mode = 'test'
 
