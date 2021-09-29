@@ -575,7 +575,7 @@ if __name__ == '__main__':
 
     model = Model(
         Padding(pad_size=2),
-        Conv2d(kaiming,out_channel=3,in_channel=1,kernel_size=(3,3)), #50*1*28*28 --> 50*5*26*26
+        Conv2d(kaiming,out_channel=3,in_channel=1,kernel_size=(3,3)), #50*1*30*30 --> 50*3*28*28
         BatchNorm2d(3),
         ReLU(),
         MaxPooling(2, 2),
