@@ -579,7 +579,6 @@ if __name__ == '__main__':
         BatchNorm2d(3),
         ReLU(),
         MaxPooling(2, 2),
-        #Padding(pad_size=2),
         Conv2d(kaiming,out_channel=27,in_channel=3,kernel_size=(3,3)),
         BatchNorm2d(27),
         ReLU(),
