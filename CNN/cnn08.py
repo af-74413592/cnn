@@ -578,14 +578,15 @@ if __name__ == '__main__':
         Conv2d(kaiming,out_channel=3,in_channel=1,kernel_size=(3,3)), #50*1*28*28 --> 50*5*26*26
         BatchNorm2d(3),
         ReLU(),
-        Padding(pad_size=2),
+        MaxPooling(2, 2),
+        #Padding(pad_size=2),
         Conv2d(kaiming,out_channel=27,in_channel=3,kernel_size=(3,3)),
         BatchNorm2d(27),
         ReLU(),
         MaxPooling(2,2),
-        Dropout(0.4),
+        #Dropout(0.4),
         Flatten(),
-        Linear(size=((27*14*14),256)),
+        Linear(size=((27*6*6),256)),
         ReLU(),
         Linear(size=(256,10)),
         Softmax()
