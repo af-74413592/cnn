@@ -200,7 +200,7 @@ class PReLU(Module):
 class Linear(Module):
     def __init__(self,size = ()):
         super().__init__("Linear")
-        self.weight = Parameter(np.random.normal(0,0.1,size=size))
+        self.weight = Parameter(np.random.normal(0,np.sqrt(2 / size[0]),size=size))
         self.bias = Parameter(np.zeros((1,size[1])))
 
     def forward(self,x):
@@ -548,7 +548,7 @@ if __name__ == '__main__':
 
     test_data = test_data / standard
 
-    lr = 0.1
+    lr = 0.5
 
     epoch = 50
 
@@ -585,9 +585,9 @@ if __name__ == '__main__':
         MaxPooling(2,2),
         #Dropout(0.4),
         Flatten(),
-        Linear(size=((27*6*6),256)),
+        Linear(size=((27*6*6),600)),
         ReLU(),
-        Linear(size=(256,10)),
+        Linear(size=(600,10)),
         Softmax()
     )
 
