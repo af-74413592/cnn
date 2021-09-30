@@ -548,7 +548,9 @@ if __name__ == '__main__':
 
     test_data = test_data / standard
 
-    lr = 0.5
+    lrmax = 0.5
+
+    lrmin = 0.05
 
     epoch = 50
 
@@ -592,13 +594,15 @@ if __name__ == '__main__':
     )
 
     #print(model)
-    params = model.get_parameters()
-    #opt = SGD(params,lr)
-    #opt = L2SGD(params, lr,r=0.001)
-    opt = MomentumSGD(params,lr)
-    #opt = Adam(params)
 
     for e in range(epoch):
+        params = model.get_parameters()
+        lr = lrmax + 1 / 2 * (lrmax - lrmin) * (1 + np.cos( e / 5 * np.pi )) #余弦退火
+        # opt = SGD(params,lr)
+        # opt = L2SGD(params, lr,r=0.001)
+        opt = MomentumSGD(params, lr)
+        # opt = Adam(params)
+
         for batch_index,(x,y) in enumerate(dataset):
 
             x = model(x, y)
