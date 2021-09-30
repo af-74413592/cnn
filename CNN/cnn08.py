@@ -585,9 +585,9 @@ if __name__ == '__main__':
         BatchNorm2d(27),
         ReLU(),
         MaxPooling(2,2),
-        #Dropout(0.4),
         Flatten(),
         Linear(size=((27*6*6),600)),
+        # Dropout(0.4), 不要和bn一起使用
         ReLU(),
         Linear(size=(600,10)),
         Softmax()
