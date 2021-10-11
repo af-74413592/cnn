@@ -626,9 +626,9 @@ if __name__ == '__main__':
     hidden_num2 = 64
     step_num = 1
     #gauss = GaussInitializer(0, 0.1)
-    #xavier = XavierInitializer(0,0.1,1,5)
-    kaiming = KaimingInitializer(0,0.1,1)
-    #lecun = LecunInitializer(0,0.1,1)
+    #xavier = XavierInitializer(-0.1,0.1,1,5)
+    kaiming = KaimingInitializer(-0.1,0.1,1)
+    #lecun = LecunInitializer(-0.1,0.1,1)
 
     model = Model(
         Padding(pad_size=2),
