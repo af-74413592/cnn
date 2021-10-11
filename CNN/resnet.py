@@ -560,31 +560,26 @@ class Model(Module):
                         break
         return ms
 
+    def getP(self,module):
+        atts = module.__dict__
+        for att in atts:
+            value = atts[att]
+            if isinstance(value, Parameter):
+                self.ps.append(value)
+            elif "__iter__" in dir(value):
+                for i in value:
+                    if isinstance(i, Parameter):
+                        self.ps.append(i)
+                    elif isinstance(i, Module):
+                        self.getP(i)
+                    else:
+                        break
+
     def get_parameters(self):
-        ps = []
-        for layers in self.modules:
-            atts = layers.__dict__
-            for att in atts:
-                value = atts[att]
-                if isinstance(value,Parameter):
-                    ps.append(value)
-                elif "__iter__" in dir(value):
-                    for i in value:
-                        if isinstance(i,Parameter):
-                            ps.append(i)
-                        elif isinstance(i,Module):
-                            vs = i.__dict__
-                            for j in vs:
-                                v = vs[j]
-                                if isinstance(v,Parameter):
-                                    ps.append(v)
-                                elif "__iter__" in dir(v):
-                                    for k in v:
-                                        if isinstance(k,Parameter):
-                                            ps.append(k)
-                        else:
-                            break
-        return ps
+        self.ps = []
+        for module in self.modules:
+            self.getP(module)
+        return self.ps
 
     def __repr__(self):
         names = [m.name for m in self.modules]
