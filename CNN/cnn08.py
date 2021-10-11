@@ -1,6 +1,5 @@
 import numpy as np
 import struct
-from scipy.stats import truncnorm
 
 def load_labels(file):   # 加载数据
     with open(file, "rb") as f :
@@ -19,10 +18,6 @@ def make_onehot(arrayx,class_num = 10):
     for index,num in enumerate(arrayx):
         result[index][num] = 1
     return result
-
-def get_truncated_normal(mean=0, sd=1, low=0, upp=10):
-    return truncnorm(
-        (low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd)
 
 def softmax(x):
     ex = np.exp(x)
@@ -101,39 +96,33 @@ class GaussInitializer(Initializer):
         return value
 
 class XavierInitializer(Initializer):
-    def __init__(self,low,upp,fan_in,fan_out):
+    def __init__(self,fan_in,fan_out):
         super().__init__("Xavier")
-        mean = 0
-        std = np.sqrt(2 / (fan_in + fan_out))
-        self.tn = get_truncated_normal(mean,std,low,upp)
+        self.mean = 0
+        self.std = np.sqrt(2 / (fan_in + fan_out))
 
     def apply(self,value):
-        arrtn = self.tn.rvs(value.size)
-        value[...] = np.array(arrtn).reshape(value.shape)
+        value[...] = np.random.normal(self.mean, self.std, value.shape)
         return value
 
 class KaimingInitializer(Initializer):
-    def __init__(self,low,upp,fan_in):
+    def __init__(self,fan_in):
         super().__init__("Kaiming")
-        mean = 0
-        std = np.sqrt(2 / (fan_in))
-        self.tn = get_truncated_normal(mean,std,low,upp)
+        self.mean = 0
+        self.std = np.sqrt(2 / (fan_in))
 
     def apply(self,value):
-        arrtn = self.tn.rvs(value.size)
-        value[...] = np.array(arrtn).reshape(value.shape)
+        value[...] = np.random.normal(self.mean, self.std, value.shape)        
         return value
 
 class LecunInitializer(Initializer):
-    def __init__(self,low,upp,fan_in):
+    def __init__(self,fan_in):
         super().__init__("Lecun")
-        mean = 0
-        std = np.sqrt(1 / (fan_in))
-        self.tn = get_truncated_normal(mean,std,low,upp)
-
+        self.mean = 0
+        self.std = np.sqrt(1 / (fan_in))
+        
     def apply(self,value):
-        arrtn = self.tn.rvs(value.size)
-        value[...] = np.array(arrtn).reshape(value.shape)
+        value[...] = np.random.normal(self.mean, self.std, value.shape)        
         return value
 
 class Sigmoid(Module):
@@ -566,9 +555,9 @@ if __name__ == '__main__':
     hidden_num2 = 64
     step_num = 1
     #gauss = GaussInitializer(0, 0.1)
-    #xavier = XavierInitializer(0,0.1,1,5)
-    kaiming = KaimingInitializer(0,0.1,1)
-    #lecun = LecunInitializer(0,0.1,1)
+    #xavier = XavierInitializer(1,5)
+    kaiming = KaimingInitializer(1)
+    #lecun = LecunInitializer(1)
 
     model = Model(
         Padding(pad_size=2),
