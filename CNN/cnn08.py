@@ -340,14 +340,9 @@ class BatchNorm2d(Module):
         delta_beta = np.sum(G, axis=1, keepdims=True)
 
         delta_x_hat = self.gamma.value * G
-        if self.mode == 'train':
-            delta_x_var = -0.5 * np.sum(delta_x_hat * (self.x - self.x_mean), axis=1, keepdims=True) * np.power(self.x_var + self.eps, -1.5)
-            delta_x_mean = -np.sum(delta_x_hat / np.sqrt(self.x_var + self.eps), axis=1, keepdims=True) - 2.0 * delta_x_var * np.sum(self.x - self.x_mean, axis=1, keepdims=True) / G.shape[1]
-            delta_x = delta_x_hat / np.sqrt(self.x_var + self.eps) + (2.0 * delta_x_var * (self.x - self.x_mean) + delta_x_mean) / G.shape[1]
-        elif self.mode == 'test':
-            delta_x_var = -0.5 * np.sum(delta_x_hat * (self.x - self.running_mean), axis=1, keepdims=True) * np.power(self.running_var + self.eps, -1.5)
-            delta_x_mean = -np.sum(delta_x_hat / np.sqrt(self.running_var + self.eps), axis=1, keepdims=True) - 2.0 * delta_x_var * np.sum(self.x - self.running_mean, axis=1, keepdims=True) / G.shape[1]
-            delta_x = delta_x_hat / np.sqrt(self.running_var + self.eps) + (2.0 * delta_x_var * (self.x - self.running_mean) + delta_x_mean) / G.shape[1]
+        delta_x_var = -0.5 * np.sum(delta_x_hat * (self.x - self.x_mean), axis=1, keepdims=True) * np.power(self.x_var + self.eps, -1.5)
+        delta_x_mean = -np.sum(delta_x_hat / np.sqrt(self.x_var + self.eps), axis=1, keepdims=True) - 2.0 * delta_x_var * np.sum(self.x - self.x_mean, axis=1, keepdims=True) / G.shape[1]
+        delta_x = delta_x_hat / np.sqrt(self.x_var + self.eps) + (2.0 * delta_x_var * (self.x - self.x_mean) + delta_x_mean) / G.shape[1]
         self.gamma.grad += delta_gamma
         self.beta.grad += delta_beta
 
