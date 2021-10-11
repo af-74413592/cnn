@@ -264,7 +264,7 @@ class Conv2d(Module):
 
         for h in range(self.c_h):
             for w in range(self.c_w):
-                back_G[..., h*self.stride:h*self.stride + self.kernel_h, w*self.stride:w*self.stride + self.kernel_w] = delta_column[...,c].reshape(G.shape[0],self.in_channel,self.kernel_h,self.kernel_w)
+                back_G[..., h*self.stride:h*self.stride + self.kernel_h, w*self.stride:w*self.stride + self.kernel_w] += delta_column[...,c].reshape(G.shape[0],self.in_channel,self.kernel_h,self.kernel_w)
                 c+=1
         return back_G
 
