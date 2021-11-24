@@ -587,15 +587,15 @@ class Model(Module):
 
 
 if __name__ == '__main__':
-    train_data = load_images("E:\\ai\\9-7\\datas\\train-images.idx3-ubyte")[:10000]
+    train_data = load_images("../data/train-images.idx3-ubyte")[:10000]
 
-    train_label = load_labels("E:\\ai\\9-7\\datas\\train-labels.idx1-ubyte")[:10000]
+    train_label = load_labels("../data/train-labels.idx1-ubyte")[:10000]
 
     train_label = make_onehot(train_label)
 
-    test_data = load_images("E:\\ai\\9-7\\datas\\t10k-images.idx3-ubyte")[:2000]
+    test_data = load_images("../data/t10k-images.idx3-ubyte")[:2000]
 
-    test_label = load_labels("E:\\ai\\9-7\\datas\\t10k-labels.idx1-ubyte")[:2000]
+    test_label = load_labels("../data/t10k-labels.idx1-ubyte")[:2000]
 
     standard = 255
 
